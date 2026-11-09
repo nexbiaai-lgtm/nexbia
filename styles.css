@@ -1537,3 +1537,8 @@ footer .brand{font-family:'Sora',system-ui,sans-serif;font-weight:800;color:var(
 .case-photo.case-logo img{display:block;width:88px;height:88px;border-radius:22px;box-shadow:0 8px 20px -12px rgba(30,20,80,.45);}
 .case-photo.case-logo img{object-fit:contain;background:#fff;}
 .case-quote.case-quote-plain{font-style:normal;}
+.section-head.geo-sub{margin:48px auto 22px;}
+.section-head.geo-sub h3{font-size:clamp(1.2rem,2.4vw,1.5rem);font-weight:800;}
+@media (min-width:761px) and (max-width:1360px){.nav-cta .btn-wa{display:inline-flex;padding:10px;border-radius:50%;}.nav-cta .btn-wa span{display:none;}}
+@media (min-width:761px) and (max-width:1200px){nav.links > a:not(.nav-planes):not(.nav-sec){padding-inline:8px;}}
+@media (min-width:761px) and (max-width:900px){nav.links > a:not(.nav-planes):not(.nav-sec){font-size:11px;padding-inline:4px;}.nav-cta .btn-nav-audit{padding-inline:12px;font-size:12px;}}
