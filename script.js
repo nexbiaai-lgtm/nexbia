@@ -720,7 +720,7 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
 
   // Aparición suave de bloques al entrar en pantalla
   if (reduce || !('IntersectionObserver' in window)) return;
-  var sel = '.section-head, .benefit-card, .usecase-card, .value-card, .trust-card, .faq-item, .case-card, .team-card, .contact-card, .final-cta, .plan:not(.hero-plan):not(.pcard), .check-item, .ab-card, .integ-row, .chat-live, .calc-box, .voice-card, .webdemo, .booking-flow, .legal-body, .plan-category .cat-head, .serp, .flows, .demo-panel, .tabs, .map-embed';
+  var sel = '.section-head, .benefit-card, .usecase-card, .value-card, .trust-card, .faq-item, .case-card, .team-card, .contact-card, .final-cta, .plan:not(.hero-plan):not(.pcard), .check-item, .ab-card, .integ-row, .chat-live, .calc-box, .voice-card, .webdemo, .booking-flow, .legal-body, .plan-category .cat-head, .serp, .aichat, .flows, .demo-panel, .tabs, .map-embed';
   var vh = window.innerHeight || 800;
   var items = [];
   document.querySelectorAll(sel).forEach(function(el){
@@ -737,4 +737,44 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
   items.forEach(function(el){ io.observe(el); });
   // red de seguridad: si algo no llegara a observarse, se muestra igualmente
   window.addEventListener('beforeprint', function(){ items.forEach(function(el){ el.classList.add('rv-in'); }); });
+})();
+
+// GEO chat example: types the question, the AI "thinks" and recommends the business first
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-aichat]').forEach(function(chat){
+    var user = chat.querySelector('[data-aichat-user]');
+    var typed = chat.querySelector('[data-aichat-typed]');
+    var items = [].slice.call(chat.querySelectorAll('.aichat-list li'));
+    var text = user.textContent;
+    chat.classList.add('js');
+    function finish(){ chat.classList.add('sent','answered','done'); items.forEach(function(li){ li.classList.add('in'); }); }
+    if (reduce || !('IntersectionObserver' in window)){ finish(); return; }
+    function answer(){
+      chat.classList.remove('thinking'); chat.classList.add('answered');
+      items.forEach(function(li, i){ setTimeout(function(){ li.classList.add('in'); }, 250 + i * 380); });
+      setTimeout(function(){ chat.classList.add('done'); }, 250 + items.length * 380 + 500);
+    }
+    function send(){
+      chat.classList.remove('typing','has-text'); typed.textContent = '';
+      chat.classList.add('sent');
+      setTimeout(function(){ chat.classList.add('thinking'); }, 300);
+      setTimeout(answer, 1700);
+    }
+    function type(i){
+      typed.textContent = text.slice(0, i);
+      chat.classList.toggle('has-text', i > 0);
+      if (i < text.length){ setTimeout(function(){ type(i + 1); }, 35 + Math.random() * 35); }
+      else { setTimeout(send, 550); }
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        chat.classList.add('typing');
+        setTimeout(function(){ type(1); }, 400);
+      });
+    }, { threshold: 0.45 });
+    io.observe(chat);
+  });
 })();
