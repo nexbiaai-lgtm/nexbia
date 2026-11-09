@@ -1578,3 +1578,13 @@ footer .brand{font-family:'Sora',system-ui,sans-serif;font-weight:800;color:var(
   .mag:hover::after,.mag:focus-visible::after{opacity:0;}
 }
 @media (prefers-reduced-motion:reduce){.mag{transition:none!important;}}
+.mag{max-width:900px;padding:22px 30px 18px;}
+.mag-grid{gap:30px;}
+.mag-cover{padding-right:26px;}
+.mag-big{font-size:clamp(4.5rem,10vw,7.2rem);}
+.mag-story :is(h2,h3){font-size:clamp(1.4rem,2.3vw,1.8rem);}
+.mag-cols{font-size:.88rem;}
+.mag-art{max-width:300px;}
+.mag-intro{margin:14px auto 0;max-width:640px;font-size:1.02rem;line-height:1.6;color:var(--muted,#5A4E8C);}
+.mag-intro strong{color:#1E1650;}
+.mag-name{white-space:nowrap;}@media (max-width:520px){.mag-top{flex-wrap:wrap;gap:4px 12px;}.mag-meta{font-size:.72rem;}}
