@@ -1,0 +1,44 @@
+# nexbia — configuración para Hostinger (Apache)
+Options -Indexes
+RewriteEngine On
+
+# 1) Siempre HTTPS y siempre www.nexbia.es
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^(.*)$ https://www.nexbia.es/$1 [R=301,L]
+
+# 2) /index.html -> / (una sola dirección para la portada)
+RewriteCond %{THE_REQUEST} \s/index\.html[\s?] [NC]
+RewriteRule ^index\.html$ / [R=301,L]
+
+# 3) La antigua página de planes lleva a contacto
+RewriteRule ^planes\.html$ /contacto.html [R=301,L]
+
+# Página de error
+ErrorDocument 404 /index.html
+
+# Seguridad básica
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=31536000"
+</IfModule>
+
+# Compresión
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript text/javascript application/json image/svg+xml application/xml text/plain
+</IfModule>
+
+# Caché: imágenes 1 año, CSS/JS 1 año (llevan ?v= de versión), HTML sin caché larga
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
