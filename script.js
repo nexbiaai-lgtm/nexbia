@@ -139,53 +139,82 @@
       if(m) return m[1] + ':00';
       return null;
     }
-    function hasDay(t){
-      return /(hoy|esta noche|esta tarde|mañana|lunes|martes|mi[ée]rcoles|jueves|viernes|s[áa]bado|domingo)/.test(t);
+    function dayOf(t){
+      var m = t.match(/\b(hoy|esta noche|esta tarde|manana|pasado manana|lunes|martes|miercoles|jueves|viernes|sabado|domingo)\b/);
+      if(!m) return null;
+      var d = m[1];
+      return ({'manana':'mañana','pasado manana':'pasado mañana','miercoles':'miércoles','sabado':'sábado'})[d] || d;
     }
-    function hasReservationIntent(t){
-      return /(reserv|mesa|cita|apunt)/.test(t);
+    function norm(raw){
+      return raw.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[¿?¡!.,;]/g,' ').replace(/\s+/g,' ').trim();
     }
+    var res = { active:false, people:null, day:null, time:null, done:false, note:null };
+    function resetRes(){ res = { active:false, people:null, day:null, time:null, done:false, note:null }; }
+    function reservationStep(t){
+      var p = extractPeople(t), d = dayOf(t), h = extractTime(t);
+      if(p) res.people = p; if(d) res.day = d; if(h) res.time = h;
+      if(res.time){ var hh = parseInt(res.time,10); if(hh >= 16 && hh < 20 || hh < 13 && hh > 0) {
+        var bad = res.time; res.time = null;
+        return 'A las ' + bad + ' tenemos la cocina cerrada 😕 Servimos comidas de 13:00 a 16:00 y cenas de 20:00 a 23:30. ¿A qué hora te viene bien dentro de ese horario?';
+      } }
+      if(res.day === 'lunes'){ res.day = null; return 'Los lunes cerramos por descanso. ¿Te viene bien otro día, de martes a domingo?'; }
+      var missing = [];
+      if(!res.people) missing.push('para cuántas personas');
+      if(!res.day) missing.push('qué día');
+      if(!res.time) missing.push('a qué hora');
+      if(!missing.length){
+        res.done = true; res.active = false;
+        return 'Listo ✅ Mesa para ' + res.people + (res.people === 1 ? ' persona' : ' personas') + ', ' + res.day + ' a las ' + res.time + '. ¿Alguna alergia o algo que debamos saber? Si no, ¡os esperamos!';
+      }
+      res.active = true;
+      var lead = res.people ? 'Genial, mesa para ' + res.people + (res.people === 1 ? ' persona' : ' personas') + '.' : 'Perfecto, te reservo encantado.';
+      if(missing.length === 3) return 'Perfecto, te reservo encantado. Dime para cuántas personas, qué día y a qué hora.';
+      return lead + ' Dime ' + missing.join(' y ') + '.';
+    }
+    var INTENTS = [
+      [/(plato estrella|especialidad|que me recomiendas|que recomiendas|recomendacion|lo mejor|que esta bueno|que esta rico|plato tipico|que pido)/,
+        'Nuestro plato estrella es el arroz negro con alioli de la casa 🥘 También triunfan el rabo de toro estofado y las berenjenas con miel de caña. ¿Te reservo mesa para probarlos?'],
+      [/(postre|dulce|tarta)/, 'De postre, la tarta de queso al horno es la favorita, y también hacemos torrijas caseras. 🍰'],
+      [/(vino|bebida|cerveza|carta de vinos|copa)/, 'Tenemos una carta de vinos con mucha bodega andaluza (Málaga, Granada y Jerez), cerveza de barril y refrescos. Vino por copa desde 3,50 €.'],
+      [/(menu del dia|menu|carta|que teneis de comer|que hay de comer|platos)/, 'Entre semana tenemos menú del día por 15 € (primero, segundo, postre y bebida). Por las noches y los fines de semana, carta: arroces, carnes a la brasa, pescado del día y tapas para compartir.'],
+      [/(precio|cuanto cuesta|cuanto vale|caro|barato|ticket medio|cuanto sale)/, 'El menú del día cuesta 15 €. A la carta, el ticket medio ronda los 25-30 € por persona con bebida.'],
+      [/(vegano|vegetariano|sin carne)/, 'Sí, tenemos opciones vegetarianas y veganas: verduras a la brasa, arroz de verduras y varias tapas. Avísanos al reservar y el equipo te aconseja.'],
+      [/(gluten|celiac|alerg|intoleran|lactosa|frutos secos|marisco)/, 'Tenemos la carta con los 14 alérgenos señalados y podemos adaptar muchos platos (sin gluten, sin lactosa…). Dinos qué alergia es y lo anotamos para que la cocina lo tenga en cuenta.'],
+      [/(horario|hora abr|a que hora|abris|abierto|cerrais|cierra|abre)/, 'Abrimos de martes a domingo: comidas de 13:00 a 16:00 y cenas de 20:00 a 23:30. Los lunes cerramos por descanso.'],
+      [/(donde|direccion|ubicacion|situais|como llego|como llegar|mapa)/, 'Estamos en pleno centro, a 2 minutos a pie de la plaza principal. Al confirmar la reserva te mando la ubicación exacta por WhatsApp.'],
+      [/(aparcar|parking|aparcamiento|coche)/, 'Hay un parking público a 150 metros, y por la noche suele ser fácil aparcar en las calles de alrededor.'],
+      [/(terraza|fuera|exterior|aire libre)/, 'Sí, tenemos terraza con 10 mesas, con calefactores en invierno. Si la quieres, dímelo al reservar.'],
+      [/(nino|ninos|trona|carrito|bebe|menu infantil)/, 'Somos muy familiares: tenemos tronas, espacio para carritos y menú infantil por 9 €.'],
+      [/(perro|mascota|animal)/, 'Las mascotas son bienvenidas en la terraza 🐶 Dentro del comedor no podemos aceptarlas.'],
+      [/(silla de ruedas|accesib|movilidad reducida|escalon)/, 'El local es accesible: entrada sin escalones y baño adaptado.'],
+      [/(grupo|evento|cumpleanos|celebracion|empresa|comida de navidad|cena de empresa|despedida)/, 'Hacemos grupos y celebraciones de hasta 40 personas, con menús cerrados desde 30 €. Dime la fecha y cuántos seréis y te paso las opciones.'],
+      [/(para llevar|domicilio|delivery|recoger|glovo|just eat|uber)/, 'Sí, puedes pedir para llevar llamando al restaurante o por WhatsApp, y recogerlo en 20 minutos. A domicilio vamos con Glovo.'],
+      [/(pagar|pago|tarjeta|bizum|efectivo)/, 'Aceptamos tarjeta, efectivo y Bizum.'],
+      [/(cancelar|anular|cambiar la reserva|modificar)/, 'Sin problema. Dime el nombre y la hora de la reserva y la cambiamos o cancelamos. Te agradecemos que avises con unas horas de antelación.'],
+      [/(wifi|enchufe)/, 'Sí, tenemos wifi gratis para clientes. La contraseña te la dan en la barra.'],
+      [/(hablar con|persona|humano|encargado|telefono|llamar)/, 'Claro, te paso con el equipo: escríbenos por WhatsApp o llama al restaurante y te atiende una persona. Mientras tanto, si quieres, yo te dejo la reserva hecha.']
+    ];
+    var askAllergy = false;
     function botReply(raw){
-      var t = raw.toLowerCase();
-
-      if(/alerg|intoleran|celiac|sin gluten|vegan|vegetarian/.test(t)){
-        return 'Anotado, gracias por avisar — lo tendremos en cuenta al preparar la mesa. ¿Confirmamos la reserva?';
+      var t = norm(raw);
+      if(!t) return '¿Me lo repites? No lo he pillado.';
+      if(/^(no|nada|nada mas|eso es todo|no gracias|ninguna|no tengo)$/.test(t)){ var was = res.done; resetRes(); return was ? '¡Perfecto! Os esperamos 🙂 Si necesitas cambiar algo, escríbeme por aquí.' : 'Vale 🙂 ¿Te ayudo con algo más? Puedo reservarte mesa o resolver dudas de la carta.'; }
+      if(/^(tengo (una )?alergia|soy alergico|soy alergica|alergias?)$/.test(t)){ askAllergy = true; return 'Gracias por avisar. ¿A qué eres alérgico/a? Lo anoto para que la cocina lo tenga en cuenta.'; }
+      if(askAllergy){ askAllergy = false; return 'Anotado ✓ La cocina lo tendrá en cuenta y el camarero te indicará qué platos puedes tomar sin problema.'; }
+      if(res.done && /(alerg|intoleran|gluten|celiac|lactosa|vegan|vegetarian|trona|carrito|terraza|silla de ruedas|cumple)/.test(t)){
+        res.done = false; resetRes();
+        return 'Anotado en tu reserva ✓ La cocina y la sala lo tendrán en cuenta. ¡Gracias por avisar!';
       }
-
-      var time = extractTime(t);
-      var day = hasDay(t);
-      var people = extractPeople(t);
-      if(hasReservationIntent(t) || time || (day && people)){
-        var missing = [];
-        if(!people) missing.push('para cuántas personas');
-        if(!day) missing.push('qué día');
-        if(!time) missing.push('a qué hora');
-        if(missing.length === 0){
-          return 'Reserva anotada' + (people ? ' para ' + people + (people === 1 ? ' persona' : ' personas') : '') + ' ✓ ¿Alguna alergia o intolerancia que debamos tener en cuenta?';
-        }
-        if(missing.length === 3){
-          return 'Claro. Dime para cuántas personas, qué día y a qué hora, y te la confirmo al momento.';
-        }
-        var lead = people ? 'Perfecto, mesa para ' + people + (people === 1 ? ' persona' : ' personas') + '.' : 'Perfecto.';
-        return lead + ' Dime ' + missing.join(' y ') + ', y te la confirmo.';
+      var wantsRes = /(reserv|mesa|apunt|hueco|sitio para)/.test(t);
+      if(wantsRes || (res.active && (extractPeople(t) || dayOf(t) || extractTime(t))) || (dayOf(t) && extractPeople(t))){
+        if(wantsRes && res.done) resetRes();
+        return reservationStep(t);
       }
-
-      if(/(hola|buenas|buenos d[ií]as|hey)/.test(t)){
-        return '¡Hola! ¿Quieres reservar mesa o tienes alguna pregunta sobre el restaurante?';
-      }
-      if(/(horario|abr[íi]s|abierto|cerr[áa]is)/.test(t)){
-        return 'Abrimos de martes a domingo, de 13:00 a 16:00 y de 20:00 a 23:30. Los lunes cerramos.';
-      }
-      if(/(men[uú]|carta|precio)/.test(t)){
-        return 'Tenemos menú del día por 15€ entre semana, y carta libre por las noches y fines de semana.';
-      }
-      if(/(d[óo]nde|direcci[óo]n|ubicaci[óo]n|situ[áa]is)/.test(t)){
-        return 'Estamos en el centro — en cuanto confirmes la reserva te paso la ubicación exacta.';
-      }
-      if(/gracias/.test(t)){
-        return '¡A ti! Te esperamos 🙂';
-      }
-      return 'Puedo ayudarte a reservar mesa, contarte el horario, la carta o dónde estamos. ¿Qué necesitas?';
+      for(var i = 0; i < INTENTS.length; i++){ if(INTENTS[i][0].test(t)) return INTENTS[i][1]; }
+      if(/(gracias|genial|perfecto|vale|ok)/.test(t)) return '¡A ti! ¿Te ayudo con algo más?';
+      if(/(adios|hasta luego|chao|nos vemos)/.test(t)) return '¡Hasta pronto! Que tengas un buen día 🙂';
+      if(/^(hola|buenas|buenos dias|buenas tardes|buenas noches|hey|que tal)( .*)?$/.test(t) && t.split(' ').length <= 3) return '¡Hola! 😊 ¿Te reservo mesa o tienes alguna pregunta sobre la carta, el horario o cómo llegar?';
+      return 'Esa no la sé responder con seguridad, y prefiero no inventármela 🙂 Te puedo ayudar con reservas, la carta y el plato estrella, horarios, alergias, grupos o cómo llegar. Si es otra cosa, te paso con el equipo por WhatsApp.';
     }
     chatForm.addEventListener('submit', function(e){
       e.preventDefault();
@@ -259,8 +288,8 @@
       if(!row) return;
       row.querySelectorAll('.chip').forEach(function(btn){
         btn.addEventListener('click', function(){
-          row.querySelectorAll('.chip').forEach(function(b){ b.setAttribute('aria-selected','false'); });
-          btn.setAttribute('aria-selected','true');
+          row.querySelectorAll('.chip').forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+          btn.setAttribute('aria-pressed','true');
           bookState[stateKey] = btn.getAttribute(dataAttr);
           updateBookSummary();
           setTimeout(function(){ showBookStep(nextStep); }, 200);
@@ -604,7 +633,7 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
   var btn = document.getElementById('bookSendBtn');
   if (!btn) return;
   var flow = btn.closest('.booking-flow');
-  function chosen(rowId){ var c = document.querySelector('#' + rowId + ' .chip[aria-selected="true"]'); return c ? (c.getAttribute('data-day') || c.getAttribute('data-time')) : ''; }
+  function chosen(rowId){ var c = document.querySelector('#' + rowId + ' .chip[aria-pressed="true"]'); return c ? (c.getAttribute('data-day') || c.getAttribute('data-time')) : ''; }
   btn.addEventListener('click', function(){
     var name = (document.getElementById('bookName').value || '').trim();
     var contact = (document.getElementById('bookContact').value || '').trim();
