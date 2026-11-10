@@ -1634,3 +1634,7 @@ footer .brand{font-family:'Sora',system-ui,sans-serif;font-weight:800;color:var(
 .book-legal a{color:inherit;text-decoration:underline;}
 .map-consent{height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;background:linear-gradient(135deg,#F6F1FF,#EDE6FF);color:var(--muted);font-size:.88rem;}
 .map-consent a{color:var(--primary);font-weight:600;}
+/* Fondo blanco con red de nodos (IA) en las cabeceras */
+body,main,.opt-hero,.page-hero{background-color:#fff!important;}
+.page-hero::before,.opt-hero::before{background-color:transparent;background-position:center top;}
+.page-hero::before,.opt-hero::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='104' viewBox='0 0 120 104'%3E%3Cg stroke='%234B3AA6' stroke-opacity='.12' stroke-width='1' fill='none'%3E%3Cpath d='M10 14L58 30L104 8M58 30L36 70L90 84L104 8M36 70L-10 60M90 84L130 66M58 30L90 84'/%3E%3C/g%3E%3Cg fill='%237A4FD1' fill-opacity='.28'%3E%3Ccircle cx='10' cy='14' r='2.4'/%3E%3Ccircle cx='58' cy='30' r='3.2'/%3E%3Ccircle cx='104' cy='8' r='2.2'/%3E%3Ccircle cx='36' cy='70' r='2.6'/%3E%3Ccircle cx='90' cy='84' r='3'/%3E%3C/g%3E%3C/svg%3E")!important;background-size:120px 104px!important;}
