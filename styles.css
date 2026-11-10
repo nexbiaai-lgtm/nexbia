@@ -1626,3 +1626,11 @@ footer .brand{font-family:'Sora',system-ui,sans-serif;font-weight:800;color:var(
 @keyframes aiPop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
 .aichat.done .aichat-list li:not(.aichat-win){opacity:.55;}
 @media (max-width:760px){.aichat{min-height:0}.aichat-body{padding:16px 14px 6px}.aichat-user{max-width:92%}}
+.legal-upd{font-size:.8rem;color:var(--muted);}
+.legal-data{list-style:none;margin:0;padding:16px 18px;border:1px solid var(--border);border-radius:14px;background:#FAF8FF;display:flex;flex-direction:column;gap:6px;}
+.legal-body ul:not(.legal-data){margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;}
+.legal-body a{color:var(--primary);text-decoration:underline;text-underline-offset:2px;}
+.book-legal{font-size:.7rem;line-height:1.45;color:var(--muted);margin-top:10px;}
+.book-legal a{color:inherit;text-decoration:underline;}
+.map-consent{height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;background:linear-gradient(135deg,#F6F1FF,#EDE6FF);color:var(--muted);font-size:.88rem;}
+.map-consent a{color:var(--primary);font-weight:600;}

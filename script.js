@@ -778,3 +778,16 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
     io.observe(chat);
   });
 })();
+
+// Google Maps: solo se carga si el usuario lo pide (sin cookies de terceros antes)
+(function(){
+  document.querySelectorAll('[data-map-load]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var box = btn.closest('.map-consent');
+      var f = document.createElement('iframe');
+      f.src = box.getAttribute('data-map-src');
+      f.loading = 'lazy'; f.title = 'Mapa'; f.referrerPolicy = 'no-referrer-when-downgrade';
+      box.replaceWith(f);
+    });
+  });
+})();
