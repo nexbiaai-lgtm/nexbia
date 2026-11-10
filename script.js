@@ -848,3 +848,20 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
     fetch(NEXBIA_FORM_URL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data) }).then(done).catch(fail);
   });
 })();
+
+// Recorrido del inicio: calculadora de horas → euros y botones que marcan el servicio en la reserva
+(function(){
+  var rate = document.getElementById('o1Rate'), out = document.getElementById('o1Month');
+  if (rate && out){
+    var upd = function(){ var v = Math.max(0, Math.min(500, parseFloat(rate.value) || 0)); out.textContent = String(Math.round(v * 18 * 4)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €'; };
+    rate.addEventListener('input', upd); upd();
+  }
+  document.querySelectorAll('.o1-want[data-servicio]').forEach(function(a){
+    a.addEventListener('click', function(){
+      var svc = a.getAttribute('data-servicio');
+      try { history.replaceState(null, '', '?servicio=' + encodeURIComponent(svc) + '#consultoria'); } catch(e) {}
+      var ctx = document.getElementById('bookContext');
+      if (ctx){ ctx.textContent = 'Revisión gratis sobre: ' + svc; ctx.style.display = ''; }
+    });
+  });
+})();

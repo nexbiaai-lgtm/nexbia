@@ -1682,3 +1682,22 @@ body,main,.opt-hero,.page-hero{background-color:#fff!important;}
 @media (prefers-reduced-motion:reduce){.logo-track{animation:none;width:auto;}.logo-set{flex-wrap:wrap;justify-content:center;}.logo-set[aria-hidden="true"]{display:none;}.logo-marquee{-webkit-mask-image:none;mask-image:none;}}
 .hero-clients{width:100%;}
 .booking-layout > *,.booking-side,.booking-side-card{min-width:0;}.booking-side-card .logo-marquee{max-width:100%;}
+/* Recorrido de captación: punto débil arriba */
+.o1-card h2{font-size:clamp(1.45rem,2.9vw,1.95rem)!important;line-height:1.15;letter-spacing:-.015em;max-width:22ch;margin-inline:auto;}
+.o1-card .o1-sol{font-size:.95rem;color:var(--muted);max-width:46ch;}
+.o1-loss{background:#FFF5F3!important;border:1px solid #FFD9D1;padding:10px 18px!important;}
+.o1-loss span{font-size:.8rem;color:#8A3B2B;}
+.o1-loss span:first-child{font-weight:700;text-transform:none;letter-spacing:.01em;}
+.o1-loss b{font-size:2.3rem!important;line-height:1.05;color:#C2412D!important;}
+.o1-actions{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px;}
+.o1-want{font-size:.92rem;padding:11px 20px;}
+.o1-more{font-size:.84rem;color:var(--primary);text-decoration:underline;text-underline-offset:3px;}
+.o1-final .o1-card h2{max-width:20ch;}
+.o1-calc{display:flex;align-items:center;justify-content:center;gap:12px;margin:18px 0 8px;font-weight:700;color:#fff;}
+.o1-calc-in{display:inline-flex;align-items:center;gap:6px;background:#fff;color:#4B3AA6;border-radius:12px;padding:6px 12px;font:800 1.2rem Sora,Inter,sans-serif;}
+.o1-calc-in input{width:4ch;border:0;font:inherit;color:inherit;text-align:right;background:transparent;outline:none;-moz-appearance:textfield;}
+.o1-calc-in input::-webkit-outer-spin-button,.o1-calc-in input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.o1-calc-in:focus-within{box-shadow:0 0 0 3px #C6A9FF;}
+.o1-final .o1-card .o1-calc-out{color:#fff;font-size:1rem;}
+.o1-calc-out b{display:block;font:800 clamp(2.4rem,6vw,3.4rem)/1.05 Sora,Inter,sans-serif;color:#fff;margin-bottom:4px;}
+.o1-loss{flex-direction:column!important;align-items:center!important;gap:0!important;}
