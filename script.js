@@ -820,3 +820,31 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
     });
   });
 })();
+
+// Inicio: formulario «¿Te recomienda ChatGPT?» (auditoría GEO gratis) → misma hoja de Reservas
+(function(){
+  var form = document.getElementById('geoForm');
+  if (!form || typeof NEXBIA_FORM_URL === 'undefined') return;
+  var btn = document.getElementById('geoSend'), err = document.getElementById('geoError'), ok = document.getElementById('geoOk');
+  function v(id){ return ((document.getElementById(id) || {}).value || '').trim(); }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = v('geoName'), biz = v('geoBiz'), city = v('geoCity'), contact = v('geoContact');
+    if (!name || !biz || !city || !contact){ err.textContent = 'Rellena los cuatro campos para poder enviarte el resultado.'; err.hidden = false; return; }
+    var isEmail = contact.indexOf('@') > -1;
+    if (isEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)){ err.textContent = 'Revisa el email, parece que falta algo.'; err.hidden = false; return; }
+    if (!isEmail && contact.replace(/\D/g,'').length < 9){ err.textContent = 'Revisa el teléfono: tiene que tener al menos 9 cifras.'; err.hidden = false; return; }
+    err.hidden = true;
+    var data = { tipo: 'Auditoría GEO gratis', nombre: name, empresa: biz, contacto: isEmail ? '' : contact, email: isEmail ? contact : '', sitio: '', dia: '', franja: '', servicio: 'Auditoría GEO · ' + city, pagina: location.pathname.split('/').pop() || 'index.html', url_trap: v('geoHp') };
+    btn.disabled = true; btn.textContent = 'Enviando…';
+    function done(){ ok.hidden = false; btn.textContent = 'Solicitud enviada ✓'; form.querySelectorAll('input').forEach(function(i){ i.disabled = true; }); }
+    function fail(){
+      btn.disabled = false; btn.textContent = 'Comprobar mi negocio gratis';
+      var msg = 'Hola, quiero la auditoría GEO gratis. Soy ' + name + ', de ' + biz + ' (' + city + ').';
+      err.textContent = 'No se ha podido enviar desde aquí. ';
+      var a = document.createElement('a'); a.href = 'https://wa.me/34620762842?text=' + encodeURIComponent(msg); a.target = '_blank'; a.rel = 'noopener';
+      var b = document.createElement('b'); b.textContent = 'Pídela por WhatsApp →'; a.appendChild(b); err.appendChild(a); err.hidden = false;
+    }
+    fetch(NEXBIA_FORM_URL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data) }).then(done).catch(fail);
+  });
+})();
