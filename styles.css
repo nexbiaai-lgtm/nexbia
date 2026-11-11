@@ -1712,3 +1712,8 @@ body,main,.opt-hero,.page-hero{background-color:#fff!important;}
 .team-social a:hover{background:#E7DCFF;}
 .team-social svg{width:16px;height:16px;}
 .team-card .team-social{justify-content:flex-start;margin-bottom:6px;}
+.o1-actions{margin-top:8px;}
+.o1-card .o1-more{display:inline-flex;align-items:center;gap:8px;font-family:Sora,Inter,sans-serif;font-weight:800;font-size:1.05rem;color:var(--primary);text-decoration:none;padding:6px 2px;background-image:linear-gradient(currentColor,currentColor);background-size:0% 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .3s ease,color .2s;}
+.o1-card .o1-more svg{width:20px;height:20px;transition:transform .25s ease;}
+.o1-card .o1-more:hover,.o1-card .o1-more:focus-visible{background-size:100% 2px;color:#7A4FD1;}
+.o1-card .o1-more:hover svg,.o1-card .o1-more:focus-visible svg{transform:translateX(4px);}
