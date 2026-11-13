@@ -865,3 +865,15 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
     });
   });
 })();
+
+/* Vídeo hero: CTA al final de cada vuelta */
+(function(){
+  var box=document.querySelector('[data-hv]'); if(!box) return;
+  var v=box.querySelector('video'), btn=box.querySelector('.hv-cta .btn');
+  if(window.matchMedia && window.matchMedia('(max-width: 640px)').matches){ v.setAttribute('poster','video/hero-s-poster.jpg'); }
+  function set(on){ box.classList.toggle('show',on); if(btn) btn.tabIndex=on?0:-1; }
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    v.removeAttribute('autoplay'); try{v.pause();}catch(e){} set(true); return;
+  }
+  v.addEventListener('timeupdate',function(){ set(v.currentTime>=12.9); });
+})();

@@ -1717,3 +1717,13 @@ body,main,.opt-hero,.page-hero{background-color:#fff!important;}
 .o1-card .o1-more svg{width:20px;height:20px;transition:transform .25s ease;}
 .o1-card .o1-more:hover,.o1-card .o1-more:focus-visible{background-size:100% 2px;color:#7A4FD1;}
 .o1-card .o1-more:hover svg,.o1-card .o1-more:focus-visible svg{transform:translateX(4px);}
+/* Vídeo hero inicio */
+.hero-video{position:relative;width:100%;max-width:980px;margin:44px auto 6px;aspect-ratio:16/9;border-radius:26px;overflow:hidden;background:#F7F4FF;box-shadow:0 0 0 1px #E2D6FB,0 40px 80px -40px rgba(43,26,110,.45);}
+.hero-video video{display:block;width:100%;height:100%;object-fit:cover;}
+.hv-cta{position:absolute;inset:0;background:rgba(247,244,255,.86);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px;text-align:center;opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s;}
+.hv-cta p{font-size:clamp(1.35rem,3.2vw,2.3rem);font-weight:800;line-height:1.12;letter-spacing:-0.03em;color:#1E1650;max-width:18ch;margin:0;}
+.hero-video.show .hv-cta{opacity:1;visibility:visible;}
+.hero-video.show .hv-cta .btn{animation:hvPulse 1.6s ease-in-out .4s infinite;}
+@keyframes hvPulse{50%{transform:scale(1.04);}}
+@media (max-width:640px){.hero-video{aspect-ratio:1/1;margin-top:32px;border-radius:20px;}.hv-cta{gap:16px;}}
+@media (prefers-reduced-motion: reduce){.hero-video.show .hv-cta .btn{animation:none;}}
