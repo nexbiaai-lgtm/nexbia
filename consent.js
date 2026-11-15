@@ -81,6 +81,7 @@
     '.ck-btns button{font:600 14px Inter,system-ui,sans-serif;padding:10px 18px;border-radius:999px;cursor:pointer;border:1.5px solid #4B3AA6;min-width:110px}' +
     '.ck-yes{background:#4B3AA6;color:#fff}.ck-no{background:#fff;color:#4B3AA6}' +
     '.ck-btns button:focus-visible{outline:3px solid #C6A9FF;outline-offset:2px}' +
+    '.ck-bar[hidden]{display:none!important}' +
     '@media (max-width:640px){.ck-bar{left:10px;right:10px;bottom:84px;padding:16px}.ck-btns{width:100%}.ck-btns button{flex:1}}';
 
   var bar = null;
