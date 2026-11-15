@@ -1,6 +1,7 @@
 /* nexbia — banner de cookies + etiqueta de Google Ads (Consent Mode v2, modo básico)
    La etiqueta de Google NO se carga hasta que el visitante pulsa «Aceptar».
-   Conversión «Contacto»: reserva enviada, auditoría GEO enviada, clic en WhatsApp o teléfono. */
+   Conversión «Contacto»: solo cuando el formulario de reserva o el de auditoría GEO se envían bien.
+   Los botones de WhatsApp y de llamar no cuentan como conversión. */
 (function(){
   var TAG_ID = 'GTM-N9B7QQNZ';
   var ADS_ID = 'AW-18571290832';
@@ -30,7 +31,7 @@
     if (loaded) return; loaded = true;
     gtag('consent', 'update', { ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted' });
     var s = document.createElement('script');
-    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + TAG_ID;
+    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ADS_ID;
     document.head.appendChild(s);
     gtag('js', new Date());
     gtag('config', TAG_ID);
@@ -51,19 +52,11 @@
   // ---- Conversión «Contacto» (una vez por tipo y por página) ----
   var sent = {};
   function conversion(kind){
-    if (!loaded || sent[kind]) return;
+    if (!loaded || sent[kind] || typeof window.gtag !== 'function') return;
     sent[kind] = true;
-    gtag('event', 'conversion', { send_to: CONVERSION, event_label: kind, transport_type: 'beacon' });
+    window.gtag('event', 'conversion', { send_to: CONVERSION, event_label: kind, transport_type: 'beacon' });
   }
   window.nexbiaConversion = conversion;
-
-  document.addEventListener('click', function(e){
-    var a = e.target.closest && e.target.closest('a[href]');
-    if (!a) return;
-    var href = a.getAttribute('href') || '';
-    if (/wa\.me\/|api\.whatsapp\.com/i.test(href)) conversion('whatsapp');
-    else if (/^tel:/i.test(href)) conversion('telefono');
-  });
 
   function watchShown(id, kind){
     var el = document.getElementById(id);
