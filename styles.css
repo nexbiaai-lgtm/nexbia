@@ -1728,7 +1728,7 @@ body,main,.opt-hero,.page-hero{background-color:#fff!important;}
 @media (max-width:640px){.hero-video{aspect-ratio:1/1;margin-top:32px;border-radius:20px;}.hv-cta{gap:16px;}}
 @media (prefers-reduced-motion: reduce){.hero-video.show .hv-cta .btn{animation:none;}}
 
-/* ===== Osadía: marca y menú Servicios desplegable ===== */
+/* ===== Marca y menú Servicios desplegable ===== */
 .brand-ia{color:#6A3DD8;}
 .has-drop{position:relative;display:flex;align-items:center;}
 .drop-btn{font:inherit;font-weight:inherit;color:var(--ink);background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}

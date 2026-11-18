@@ -920,7 +920,7 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
       '</div>' +
       '<p class="qf-err" role="alert" hidden></p>' +
       '<p class="qf-ok" role="status" hidden><b>¡Recibido!</b> Te llamamos en horario de 10:00 a 19:00, de lunes a viernes. Son 15 minutos y sin compromiso.</p>' +
-      '<p class="qf-legal">Responsable: Daniel Mata Jiménez (Osadía). Usamos tu teléfono solo para llamarte. <a href="privacidad.html">Privacidad</a></p>' +
+      '<p class="qf-legal">Responsable: Daniel Mata Jiménez (nexbia). Usamos tu teléfono solo para llamarte. <a href="privacidad.html">Privacidad</a></p>' +
     '</form>';
   }
   function wire(form){
