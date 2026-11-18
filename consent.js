@@ -1,4 +1,4 @@
-/* nexbia — banner de cookies + etiqueta de Google Ads (Consent Mode v2, modo básico)
+/* Crecemia — banner de cookies + etiqueta de Google Ads (Consent Mode v2, modo básico)
    La etiqueta de Google NO se carga hasta que el visitante pulsa «Aceptar».
    Conversión «Contacto»: solo cuando el formulario de reserva o el de auditoría GEO se envían bien.
    Los botones de WhatsApp y de llamar no cuentan como conversión. */

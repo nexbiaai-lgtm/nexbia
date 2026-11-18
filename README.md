@@ -1,3 +1,3 @@
-# nexbia — www.nexbia.es
+# Crecemia — www.crecemia.es
 
-Web estática de nexbia. Se publica en Hostinger desde la rama main.
+Web estática de Crecemia. Se publica en Hostinger desde la rama main.

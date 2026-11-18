@@ -1,11 +1,11 @@
-# nexbia — configuración para Hostinger (Apache)
+# Crecemia — configuración para Hostinger (Apache)
 Options -Indexes
 RewriteEngine On
 
-# 1) Siempre HTTPS y siempre www.nexbia.es
+# 1) Siempre HTTPS y siempre www.crecemia.es
 RewriteCond %{HTTPS} off [OR]
-RewriteCond %{HTTP_HOST} !^www\. [NC]
-RewriteRule ^(.*)$ https://www.nexbia.es/$1 [R=301,L]
+RewriteCond %{HTTP_HOST} !^www\.crecemia\.es$ [NC]
+RewriteRule ^(.*)$ https://www.crecemia.es/$1 [R=301,L]
 
 # 2) /index.html -> / (una sola dirección para la portada)
 RewriteCond %{THE_REQUEST} \s/index\.html[\s?] [NC]
