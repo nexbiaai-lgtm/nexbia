@@ -899,3 +899,81 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
     });
   });
 })();
+
+/* ===== Formulario rápido (portada + ventana desde cualquier "Consultoría gratis") ===== */
+(function(){
+  if (typeof NEXBIA_FORM_URL === 'undefined') return;
+  var TEMAS = ['Atender llamadas y WhatsApp', 'Más clientes desde Google', 'Quitarme papeleo', 'Una web nueva'];
+  var n = 0;
+  function html(){
+    n++; var p = 'qf' + n;
+    return '<form class="qf" novalidate>' +
+      '<p class="qf-q" id="' + p + 'q">¿Qué quieres mejorar primero?</p>' +
+      '<div class="qf-chips" role="group" aria-labelledby="' + p + 'q">' +
+        TEMAS.map(function(t){ return '<button type="button" class="qf-chip" aria-pressed="false">' + t + '</button>'; }).join('') +
+      '</div>' +
+      '<div class="qf-fields">' +
+        '<label class="qf-l" for="' + p + 'n">Tu nombre</label><input class="qf-in" id="' + p + 'n" name="nombre" autocomplete="name" placeholder="Tu nombre">' +
+        '<label class="qf-l" for="' + p + 't">Teléfono o WhatsApp</label><input class="qf-in" id="' + p + 't" name="contacto" type="tel" inputmode="tel" autocomplete="tel" placeholder="Teléfono o WhatsApp">' +
+        '<input class="hp-field" name="url_trap" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+        '<button type="submit" class="btn btn-primary btn-lg qf-send">Quiero mi llamada gratis</button>' +
+      '</div>' +
+      '<p class="qf-err" role="alert" hidden></p>' +
+      '<p class="qf-ok" role="status" hidden><b>¡Recibido!</b> Te llamamos en horario de 10:00 a 19:00, de lunes a viernes. Son 15 minutos y sin compromiso.</p>' +
+      '<p class="qf-legal">Responsable: Daniel Mata Jiménez (Osadía). Usamos tu teléfono solo para llamarte. <a href="privacidad.html">Privacidad</a></p>' +
+    '</form>';
+  }
+  function wire(form){
+    var tema = '';
+    form.querySelectorAll('.qf-chip').forEach(function(c){
+      c.addEventListener('click', function(){
+        form.querySelectorAll('.qf-chip').forEach(function(o){ o.setAttribute('aria-pressed', 'false'); });
+        c.setAttribute('aria-pressed', 'true'); tema = c.textContent;
+        form.classList.add('qf-open');
+        var nm = form.querySelector('[name=nombre]'); if (nm && !nm.value) nm.focus();
+      });
+    });
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var err = form.querySelector('.qf-err'), ok = form.querySelector('.qf-ok'), btn = form.querySelector('.qf-send');
+      var nombre = form.querySelector('[name=nombre]').value.trim();
+      var tel = form.querySelector('[name=contacto]').value.trim();
+      if (!nombre || tel.replace(/\D/g, '').length < 9){
+        err.textContent = !nombre ? 'Dinos tu nombre para saber por quién preguntar.' : 'Revisa el teléfono: tiene que tener al menos 9 cifras.';
+        err.hidden = false; return;
+      }
+      err.hidden = true; btn.disabled = true; btn.textContent = 'Enviando…';
+      var data = { tipo: 'Llamada rápida', nombre: nombre, empresa: '', contacto: tel, email: '', sitio: '', dia: '', franja: '', servicio: tema || 'Sin elegir', pagina: location.pathname.split('/').pop() || 'index.html', url_trap: form.querySelector('[name=url_trap]').value };
+      function done(){
+        form.classList.add('qf-done'); ok.hidden = false; btn.textContent = 'Enviado ✓';
+        if (typeof window.nexbiaConversion === 'function') window.nexbiaConversion('llamada-rapida');
+      }
+      function fail(){
+        btn.disabled = false; btn.textContent = 'Quiero mi llamada gratis';
+        err.innerHTML = 'No se ha podido enviar desde aquí. <a href="https://wa.me/34620762842?text=' + encodeURIComponent('Hola, soy ' + nombre + '. Quiero la llamada gratis' + (tema ? ' sobre: ' + tema : '') + '.') + '" target="_blank" rel="noopener"><b>Escríbenos por WhatsApp →</b></a>';
+        err.hidden = false;
+      }
+      fetch(NEXBIA_FORM_URL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data) }).then(done).catch(fail);
+    });
+  }
+  document.querySelectorAll('[data-quick-form]').forEach(function(box){ box.innerHTML = html(); wire(box.querySelector('form')); });
+
+  // Ventana: cualquier botón "Consultoría gratis" la abre sin cambiar de página
+  if (!window.HTMLDialogElement) return;
+  var dlg = null;
+  function open(){
+    if (!dlg){
+      dlg = document.createElement('dialog'); dlg.className = 'qf-dialog'; dlg.setAttribute('aria-labelledby', 'qf-dlg-t');
+      dlg.innerHTML = '<button type="button" class="qf-close" aria-label="Cerrar">×</button><h2 id="qf-dlg-t">Te llamamos gratis</h2><p class="qf-sub">15 minutos para ver qué te podemos quitar de encima. Sin compromiso.</p>' + html();
+      document.body.appendChild(dlg); wire(dlg.querySelector('form'));
+      dlg.querySelector('.qf-close').addEventListener('click', function(){ dlg.close(); });
+      dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+    }
+    dlg.showModal();
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a.btn-cta, [data-open-form]');
+    if (!a) return;
+    e.preventDefault(); open();
+  });
+})();

@@ -1749,3 +1749,29 @@ body,main,.opt-hero,.page-hero{background-color:#fff!important;}
   .drop-menu::before{display:none;}
   .drop-menu a{padding:13px 6px;border-radius:0;border-bottom:1px solid var(--line);font-weight:600;}
 }
+
+/* ===== Formulario rápido ===== */
+.qf-hero{max-width:640px;margin:26px auto 0;background:#fff;border-radius:20px;box-shadow:0 18px 50px -12px rgba(40,25,90,.22);padding:22px 22px 16px;text-align:left;}
+.qf-q{margin:0 0 12px;font-weight:700;font-size:1.02rem;color:var(--ink);}
+.qf-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.qf-chip{font:inherit;font-weight:600;font-size:.92rem;padding:11px 15px;min-height:44px;border-radius:999px;border:1.5px solid #D9CCFA;background:#F6F1FF;color:#2A1F6E;cursor:pointer;transition:background .15s,border-color .15s;}
+.qf-chip:hover{border-color:#7A4FD1;}
+.qf-chip[aria-pressed="true"]{background:#4B3AA6;border-color:#4B3AA6;color:#fff;}
+.qf-chip:focus-visible,.qf-in:focus-visible{outline:3px solid #C6A9FF;outline-offset:2px;}
+.qf-fields{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.qf-open .qf-fields{display:grid;}
+.qf-l{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+.qf-in{font:inherit;font-size:1rem;padding:13px 14px;min-height:48px;border-radius:12px;border:1.5px solid #D9CCFA;background:#fff;color:var(--ink);box-sizing:border-box;width:100%;}
+.qf-send{grid-column:1/-1;justify-content:center;width:100%;}
+.qf-err{margin:10px 0 0;color:#B0254F;font-size:.9rem;}
+.qf-ok{margin:12px 0 0;padding:12px 14px;border-radius:12px;background:#EAF8F0;color:#0F5132;font-size:.95rem;}
+.qf-done .qf-chips,.qf-done .qf-fields,.qf-done .qf-q{display:none;}
+.qf-legal{margin:10px 0 0;font-size:.78rem;color:var(--muted);}
+.qf-wa{display:block;text-align:center;margin-top:14px;}
+.qf-dialog{border:0;border-radius:22px;padding:28px 24px 20px;width:min(560px,calc(100vw - 24px));box-shadow:0 30px 80px -10px rgba(30,20,80,.45);color:var(--ink);}
+.qf-dialog::backdrop{background:rgba(29,14,69,.55);}
+.qf-dialog h2{margin:0 0 6px;font-family:'Sora',sans-serif;font-size:1.5rem;}
+.qf-sub{margin:0 0 16px;color:var(--muted);}
+.qf-close{position:absolute;top:10px;right:12px;width:44px;height:44px;border:0;background:none;font-size:1.8rem;line-height:1;color:var(--ink);cursor:pointer;border-radius:10px;}
+.qf-close:hover{background:#F3EDFF;}
+@media (max-width:560px){.qf-fields{grid-template-columns:1fr;}.qf-hero{padding:18px 16px 14px;}.qf-chip{font-size:.88rem;padding:10px 13px;}}
