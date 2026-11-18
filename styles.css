@@ -1727,3 +1727,25 @@ body,main,.opt-hero,.page-hero{background-color:#fff!important;}
 @keyframes hvPulse{50%{transform:scale(1.04);}}
 @media (max-width:640px){.hero-video{aspect-ratio:1/1;margin-top:32px;border-radius:20px;}.hv-cta{gap:16px;}}
 @media (prefers-reduced-motion: reduce){.hero-video.show .hv-cta .btn{animation:none;}}
+
+/* ===== Osadía: marca y menú Servicios desplegable ===== */
+.brand-ia{color:#6A3DD8;}
+.has-drop{position:relative;display:flex;align-items:center;}
+.drop-btn{font:inherit;font-weight:inherit;color:var(--ink);background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.drop-btn svg{width:14px;height:14px;transition:transform .2s ease;}
+.drop-btn:hover,.has-drop.is-current > .drop-btn{color:var(--primary);}
+.drop-btn:focus-visible{outline:3px solid #C6A9FF;outline-offset:3px;border-radius:6px;}
+.drop-menu{position:absolute;top:calc(100% + 14px);left:-14px;min-width:220px;background:#fff;border-radius:14px;box-shadow:0 14px 40px rgba(40,25,90,.16);padding:8px;display:none;flex-direction:column;gap:2px;z-index:60;}
+.drop-menu::before{content:"";position:absolute;left:0;right:0;top:-16px;height:16px;}
+.has-drop:hover .drop-menu,.has-drop:focus-within .drop-menu,.has-drop.open .drop-menu{display:flex;}
+.has-drop:hover .drop-btn svg,.has-drop.open .drop-btn svg{transform:rotate(180deg);}
+.drop-menu a{padding:10px 12px;border-radius:10px;text-decoration:none;color:var(--ink);font-weight:600;white-space:nowrap;}
+.drop-menu a:hover,.drop-menu a.active{background:#F3EDFF;color:#4B3AA6;}
+@media (max-width:760px){
+  .has-drop{flex-direction:column;align-items:stretch;}
+  .drop-btn{padding:15px 6px;width:100%;justify-content:space-between;font-size:1.02rem;font-weight:650;border-bottom:1px solid var(--line);}
+  .drop-btn svg{display:none;}
+  .drop-menu{position:static;display:flex;box-shadow:none;background:none;padding:0 0 0 14px;min-width:0;border-radius:0;}
+  .drop-menu::before{display:none;}
+  .drop-menu a{padding:13px 6px;border-radius:0;border-bottom:1px solid var(--line);font-weight:600;}
+}

@@ -11,8 +11,10 @@ RewriteRule ^(.*)$ https://www.nexbia.es/$1 [R=301,L]
 RewriteCond %{THE_REQUEST} \s/index\.html[\s?] [NC]
 RewriteRule ^index\.html$ / [R=301,L]
 
-# 3) La antigua página de planes lleva a contacto
+# 3) Páginas antiguas
 RewriteRule ^planes\.html$ /contacto.html [R=301,L]
+RewriteRule ^casos-de-exito\.html$ / [R=301,L]
+RewriteRule ^digitalizacion\.html$ / [R=301,L]
 
 # Página de error
 ErrorDocument 404 /index.html

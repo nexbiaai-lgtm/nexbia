@@ -877,3 +877,25 @@ var NEXBIA_FORM_URL = 'https://script.google.com/macros/s/AKfycbwBwdnmp4AiEegJpM
   }
   v.addEventListener('timeupdate',function(){ set(v.currentTime>=12.9); });
 })();
+
+/* Menú Servicios desplegable: clic/teclado y cierre con Escape o clic fuera */
+(function(){
+  var drops = document.querySelectorAll('.has-drop');
+  drops.forEach(function(d){
+    var btn = d.querySelector('.drop-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function(){
+      var open = !d.classList.contains('open');
+      d.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    d.addEventListener('keydown', function(e){
+      if (e.key === 'Escape'){ d.classList.remove('open'); btn.setAttribute('aria-expanded','false'); btn.focus(); }
+    });
+  });
+  document.addEventListener('click', function(e){
+    drops.forEach(function(d){
+      if (!d.contains(e.target)){ d.classList.remove('open'); var b = d.querySelector('.drop-btn'); if (b) b.setAttribute('aria-expanded','false'); }
+    });
+  });
+})();
