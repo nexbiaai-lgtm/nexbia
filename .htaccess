@@ -2,12 +2,14 @@
 Options -Indexes
 RewriteEngine On
 
-# 1) Siempre HTTPS y siempre con www
-# (nexbia.es sigue sirviendo la web hasta que crecemia.es esté activo; luego se redirige entero)
+# 1) Una sola dirección: https://www.crecemia.es
+# nexbia.es (antigua marca) redirige entera a crecemia.es, página a página.
+# Los archivos de verificación de Google se dejan accesibles en nexbia.es.
+RewriteCond %{HTTP_HOST} nexbia\.es$ [NC]
+RewriteCond %{REQUEST_URI} !^/google[0-9a-f]+\.html$ [NC]
+RewriteRule ^(.*)$ https://www.crecemia.es/$1 [R=301,L]
 RewriteCond %{HTTP_HOST} ^crecemia\.es$ [NC]
 RewriteRule ^(.*)$ https://www.crecemia.es/$1 [R=301,L]
-RewriteCond %{HTTP_HOST} ^nexbia\.es$ [NC]
-RewriteRule ^(.*)$ https://www.nexbia.es/$1 [R=301,L]
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
